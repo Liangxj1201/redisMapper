@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.HouseUserMapper">
+
+    <resultMap id="resultHouseUser" type="com.example.demo.entity.HouseUser">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="selectSqlHouseUser">
+     id,name,age
+  </sql>
+    <sql id="variableSqlHouseUser">
+    #{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{age,jdbcType=VARCHAR}
+  </sql>
+    <sql id="whereSqlHouseUser">
+        where 1=1
+        <if test="name != null and name != ''">and name=#{name}</if>
+        <if test="id != null and id != ''">and id=#{id}</if>
+        <if test="age != null and age != ''">and age=#{age}</if>
+    </sql>
+
+    <insert id="insertHouseUser" parameterType="java.util.Map">
+        INSERT INTO house_user (
+        <include refid="selectSqlHouseUser"/>
+        ) VALUES (<include refid="variableSqlHouseUser"/>)
+    </insert>
+    <update id="updateHouseUser" parameterType="java.util.Map">
+        UPDATE house_user
+        <trim prefix="SET" prefixOverrides=",">
+
+            <if test="name != null and name != ''">,name=#{name}</if>
+
+            <if test="age != null and age != ''">,age=#{age}</if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="java.util.Map">
+       DELETE FROM house_user WHERE  id=#{id}
+   </delete>
+    <select id="selectById" resultMap="resultHouseUser" parameterType="java.util.Map">
+        select
+        <include refid="selectSqlHouseUser"/>
+        from house_user WHERE id=#{id}
+    </select>
+    <select id="selectByUser" resultMap="resultHouseUser" parameterType="java.util.Map">
+        select
+        <include refid="selectSqlHouseUser"/>
+        from house_user <include refid="whereSqlHouseUser"/>
+    </select>
+    <select id="selectAll" resultMap="resultHouseUser">
+        select
+        <include refid="selectSqlHouseUser"/>
+        from house_user
+    </select>
+
+
+
+</mapper>
+
+
+
